@@ -31,12 +31,13 @@ enum class TimeUnits {
     DAY;
 
     fun plural(number: Long): String {
-        val isLessFive: Boolean = number % 10 in 1..4
+
+        val isLessFive: Boolean = number % 10 in 2..4
         val unitStr = when (this) {
-            SECOND -> if (isLessFive) "секунды" else "секунд"
-            MINUTE -> if (isLessFive) "минуты" else "минут"
-            HOUR -> if (isLessFive) "часа" else "часов"
-            DAY -> if (isLessFive) "дня" else "дней"
+            SECOND -> if (number == 1L) "секунду" else if (isLessFive) "секунды" else "секунд"
+            MINUTE -> if (number == 1L) "минуту" else if (isLessFive) "минуты" else "минут"
+            HOUR ->if (number == 1L) "час" else if (isLessFive) "часа" else "часов"
+            DAY ->if (number == 1L) "день" else if (isLessFive) "дня" else "дней"
         }
         return "$number $unitStr"
     }
