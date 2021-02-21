@@ -30,37 +30,36 @@ enum class TimeUnits {
     HOUR,
     DAY;
 
-    fun plural(number: Long): String {
-
-        val isLessFive: Boolean = number % 10 in 2..4
+    fun plural(value: Int): String {
+        val isLessFive: Boolean = value % 10 in 2..4
         val unitStr = when (this) {
-            SECOND -> if (number == 1L) "секунду" else if (isLessFive) "секунды" else "секунд"
-            MINUTE -> if (number == 1L) "минуту" else if (isLessFive) "минуты" else "минут"
-            HOUR ->if (number == 1L) "час" else if (isLessFive) "часа" else "часов"
-            DAY ->if (number == 1L) "день" else if (isLessFive) "дня" else "дней"
+            SECOND -> if (value == 1) "секунду" else if (isLessFive) "секунды" else "секунд"
+            MINUTE -> if (value == 1) "минуту" else if (isLessFive) "минуты" else "минут"
+            HOUR -> if (value == 1) "час" else if (isLessFive) "часа" else "часов"
+            DAY -> if (value == 1) "день" else if (isLessFive) "дня" else "дней"
         }
-        return "$number $unitStr"
+        return "$value $unitStr"
     }
 }
 
 fun Date.humanizeDiff(date: Date = Date()): String {
-    return when (val value = date.time - this.time) {
+    return when (val value = (date.time - this.time)) {
         in Long.MIN_VALUE..-360 * DAY -> "более чем через год"
-        in -360 * DAY..-26 * HOUR -> "через ${TimeUnits.DAY.plural(-value / DAY)}"
+        in -360 * DAY..-26 * HOUR -> "через ${TimeUnits.DAY.plural((-value / DAY).toInt())}"
         in -26 * HOUR..-22 * HOUR -> "через день"
-        in -22 * HOUR..-75 * MINUTE -> "через ${TimeUnits.HOUR.plural(-value / HOUR)}"
+        in -22 * HOUR..-75 * MINUTE -> "через ${TimeUnits.HOUR.plural((-value / HOUR).toInt())}"
         in -75 * MINUTE..-45 * MINUTE -> "через час"
-        in -45 * MINUTE..-75 -> "через ${TimeUnits.MINUTE.plural(-value / MINUTE)}"
+        in -45 * MINUTE..-75 -> "через ${TimeUnits.MINUTE.plural((-value / MINUTE).toInt())}"
         in -75..-45 -> "через минуту"
         in -45..-1 -> "через несколько секунд"
         in -1..1 -> "только что"
         in 1..45 -> "несколько секунд назад"
         in 45..75 -> "минуту назад"
-        in 75..45 * MINUTE -> "${TimeUnits.MINUTE.plural(value / MINUTE)} назад"
+        in 75..45 * MINUTE -> "${TimeUnits.MINUTE.plural((value / MINUTE).toInt())} назад"
         in 45 * MINUTE..75 * MINUTE -> "час назад"
-        in 75 * MINUTE..22 * HOUR -> "${TimeUnits.HOUR.plural(value / HOUR)} назад"
+        in 75 * MINUTE..22 * HOUR -> "${TimeUnits.HOUR.plural((value / HOUR).toInt())} назад"
         in 22 * HOUR..26 * HOUR -> "день назад"
-        in 26 * HOUR..360 * DAY -> "${TimeUnits.DAY.plural(value / DAY)} назад"
+        in 26 * HOUR..360 * DAY -> "${TimeUnits.DAY.plural((value / DAY).toInt())} назад"
         in 360 * DAY..Long.MAX_VALUE -> "более года назад"
         else -> "undefined interval"
     }
