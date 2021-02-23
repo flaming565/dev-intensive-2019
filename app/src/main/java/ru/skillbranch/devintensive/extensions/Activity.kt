@@ -13,7 +13,6 @@ fun Activity.hideKeyboard() {
     }
 }
 
-
 fun Activity.isKeyboardOpen(): Boolean {
     val rootView = window.decorView.rootView
     val r = Rect()
