@@ -16,11 +16,10 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         if (validationMessage.isEmpty()) {
             return if (question.answers.contains(answer.toLowerCase())) {
                 question = question.nextQuestion()
-                "Отлично - это правильный ответ!\n${question.question}" to status.color
+                "Отлично - ты справился\n${question.question}" to status.color
             } else {
                 status = status.nextStatus()
-                "Это не правильный ответ!\n" +
-                        "${question.question}" to status.color
+                "Это неправильный ответ\n${question.question}" to status.color
             }
         } else
             return "$validationMessage\n${question.question}" to status.color
@@ -80,7 +79,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         NORMAL(Triple(255, 255, 255)),
         WARNING(Triple(255, 120, 0)),
         DANGER(Triple(255, 60, 60)),
-        CRITICAL(Triple(255, 255, 0));
+        CRITICAL(Triple(255, 0, 0));
 
         fun nextStatus(): Status {
             return if (this.ordinal < values().lastIndex)
@@ -91,7 +90,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     enum class Question(val question: String, val answers: List<String>) {
-        NAME("Как меня зовут?", listOf("бендер", "bender")) {
+        NAME("Как меня зовут?", listOf("Бендер", "bender"))  {
             override fun nextQuestion(): Question = PROFESSION
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
