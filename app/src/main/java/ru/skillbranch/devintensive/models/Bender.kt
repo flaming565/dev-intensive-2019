@@ -2,6 +2,8 @@ package ru.skillbranch.devintensive.models
 
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
+    private var countWrongAnswers = 0
+
     fun askQuestion(): String = when (question) {
         Question.NAME -> Question.NAME.question
         Question.PROFESSION -> Question.PROFESSION.question
@@ -16,10 +18,19 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         if (validationMessage.isEmpty()) {
             return if (question.answers.contains(answer.toLowerCase())) {
                 question = question.nextQuestion()
+                countWrongAnswers = 0
                 "Отлично - ты справился\n${question.question}" to status.color
             } else {
-                status = status.nextStatus()
-                "Это неправильный ответ\n${question.question}" to status.color
+                countWrongAnswers += 1
+                if (countWrongAnswers == 3){
+                    status = Status.NORMAL
+                    question = Question.NAME
+                    "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+                }
+                else {
+                    status = status.nextStatus()
+                    "Это неправильный ответ\n${question.question}" to status.color
+                }
             }
         } else
             return "$validationMessage\n${question.question}" to status.color
